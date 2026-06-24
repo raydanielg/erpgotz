@@ -46,9 +46,9 @@ export default function BrandSettings({ userSettings, auth }: BrandSettingsProps
     sidebarVariant: userSettings?.sidebarVariant || 'inset',
     sidebarStyle: userSettings?.sidebarStyle || 'plain',
     layoutDirection: userSettings?.layoutDirection || 'ltr',
-    themeMode: userSettings?.themeMode || 'light',
-    themeColor: userSettings?.themeColor || 'green',
-    customColor: userSettings?.customColor || '#10b77f',
+    themeMode: userSettings?.themeMode || 'dark',
+    themeColor: userSettings?.themeColor || 'orange',
+    customColor: userSettings?.customColor || '#f97316',
   });
 
   // Update settings when userSettings prop changes

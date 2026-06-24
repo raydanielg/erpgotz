@@ -16,12 +16,12 @@ interface ThemePreviewProps {
 export function ThemePreview({ 
   logoDark, 
   logoLight, 
-  themeColor = 'green',
-  customColor = '#10b77f',
+  themeColor = 'orange',
+  customColor = '#f97316',
   sidebarVariant = 'inset',
   sidebarStyle = 'plain',
   layoutDirection = 'ltr',
-  themeMode = 'light'
+  themeMode = 'dark'
 }: ThemePreviewProps) {
   const { t } = useTranslation();
 
@@ -38,7 +38,7 @@ export function ThemePreview({
     red: '#ef4444'
   };
 
-  const primaryColor = themeColor === 'custom' ? customColor : themeColors[themeColor as keyof typeof themeColors] || '#10b77f';
+  const primaryColor = themeColor === 'custom' ? customColor : themeColors[themeColor as keyof typeof themeColors] || '#f97316';
   
   const isDark = themeMode === 'dark';
   const isRTL = layoutDirection === 'rtl';
