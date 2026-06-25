@@ -5,7 +5,7 @@ import { usePageButtons } from '@/hooks/usePageButtons';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
-import { Plus } from 'lucide-react';
+import { Plus, ArrowRight } from 'lucide-react';
 
 import AuthenticatedLayout from '@/layouts/authenticated-layout';
 import DealShowSidebar from "./Show/DealShowSidebar";
@@ -137,6 +137,21 @@ export default function Show() {
             backUrl={route('lead.deals.index')}
             pageActions={
                 <div className="flex items-center gap-2">
+                    {deal.status === 'Active' && (
+                        <Button
+                            size="sm"
+                            variant="outline"
+                            onClick={() => {
+                                if (confirm(t('Are you sure you want to convert this deal to a project?'))) {
+                                    router.post(route('lead.deals.convert-to-project', deal.id));
+                                }
+                            }}
+                            className="gap-1"
+                        >
+                            <ArrowRight className="h-4 w-4" />
+                            {t('Convert to Project')}
+                        </Button>
+                    )}
                     {videoHubButtons && videoHubButtons.length > 0 && (
                         <div className="flex items-center gap-2">
                             {videoHubButtons.map((button, index) => (

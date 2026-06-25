@@ -18,7 +18,7 @@ import { CurrencyInput } from '@/components/ui/currency-input';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { formatCurrency, formatDate, downloadFile } from '@/utils/helpers';
 import { getImagePath } from '@/utils/helpers';
-import { Plus, Trash2, Edit, FolderKanban, Kanban, List, Bug, CheckSquare, Calendar, Activity, Image, File, FileText, Video, Music, Download, Eye } from "lucide-react";
+import { Plus, Trash2, Edit, FolderKanban, Kanban, List, Bug, CheckSquare, Calendar, Activity, Image, File, FileText, Video, Music, Download, Eye, FileOutput } from "lucide-react";
 import { Slider } from "@/components/ui/slider";
 import { DataTable } from "@/components/ui/data-table";
 import NoRecordsFound from '@/components/no-records-found';
@@ -308,6 +308,27 @@ export default function Show() {
             pageActions={
                 <div className="flex gap-2">
                     <TooltipProvider>
+                        {auth.user?.permissions?.includes('manage-project') && (
+                            <Tooltip delayDuration={0}>
+                                <TooltipTrigger asChild>
+                                    <Button
+                                        size="sm"
+                                        variant="outline"
+                                        onClick={() => {
+                                            if (confirm(t('Are you sure you want to generate an invoice from this project?'))) {
+                                                router.post(route('project.generate-invoice', project.id));
+                                            }
+                                        }}
+                                    >
+                                        <FileOutput className="h-4 w-4 mr-1" />
+                                        {t('Generate Invoice')}
+                                    </Button>
+                                </TooltipTrigger>
+                                <TooltipContent>
+                                    <p>{t('Generate Invoice')}</p>
+                                </TooltipContent>
+                            </Tooltip>
+                        )}
                         {videoHubButtons.map((button) => (
                             <div key={button.id}>
                                 {button.component}

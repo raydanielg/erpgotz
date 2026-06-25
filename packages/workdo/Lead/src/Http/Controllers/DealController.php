@@ -49,6 +49,9 @@ use Workdo\Lead\Events\DealCallUpdate;
 use Workdo\Lead\Events\DestroyDealCall;
 use Workdo\Lead\Events\DealAddEmail;
 use Workdo\Lead\Models\Source;
+use Workdo\Taskly\Models\Project;
+use Workdo\Taskly\Models\ProjectUser;
+use Workdo\Taskly\Models\ProjectClient;
 
 class DealController extends Controller
 {
@@ -723,6 +726,59 @@ class DealController extends Controller
             $deal->save();
             return back()->with('success', __('The deal status updated successfully.'));
         }else{
+            return back()->with('error', __('Permission denied'));
+        }
+    }
+
+    public function convertToProject(Request $request, Deal $deal)
+    {
+        if (Auth::user()->can('edit-deals')) {
+            if ($deal->created_by != creatorId()) {
+                return back()->with('error', __('Permission denied'));
+            }
+
+            if ($deal->status !== 'Active') {
+                return back()->with('error', __('Only active deals can be converted to a project.'));
+            }
+
+            try {
+                $project = new Project();
+                $project->name = $deal->name;
+                $project->description = $deal->notes ?? '';
+                $project->budget = $deal->price ?? 0;
+                $project->start_date = now();
+                $project->end_date = now()->addMonths(3);
+                $project->status = 'Ongoing';
+                $project->creator_id = Auth::id();
+                $project->created_by = creatorId();
+                $project->save();
+
+                // Transfer deal users to project team members
+                $userDeals = UserDeal::where('deal_id', $deal->id)->pluck('user_id')->toArray();
+                if (!empty($userDeals)) {
+                    $project->teamMembers()->sync($userDeals);
+                }
+
+                // Transfer deal clients to project clients
+                $clientDeals = ClientDeal::where('deal_id', $deal->id)->pluck('client_id')->toArray();
+                if (!empty($clientDeals)) {
+                    foreach ($clientDeals as $clientId) {
+                        ProjectClient::firstOrCreate([
+                            'project_id' => $project->id,
+                            'client_id' => $clientId,
+                        ]);
+                    }
+                }
+
+                // Mark deal as converted
+                $deal->status = 'Converted';
+                $deal->save();
+
+                return redirect()->route('project.show', $project->id)->with('success', __('The deal has been converted to a project successfully.'));
+            } catch (\Exception $e) {
+                return back()->with('error', $e->getMessage());
+            }
+        } else {
             return back()->with('error', __('Permission denied'));
         }
     }

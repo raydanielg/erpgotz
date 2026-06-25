@@ -77,6 +77,7 @@ Route::middleware(['web', 'auth', 'verified', 'PlanModuleCheck:Lead'])->group(fu
     Route::resource('crm/deals', DealController::class)->names('lead.deals');
     Route::post('crm/deals/order', [DealController::class, 'order'])->name('lead.deals.order');
     Route::post('crm/deals/{deal}/change-status', [DealController::class, 'changeStatus'])->name('lead.deals.change-status');
+    Route::post('crm/deals/{deal}/convert-to-project', [DealController::class, 'convertToProject'])->name('lead.deals.convert-to-project');
     Route::patch('crm/deals/{deal}/labels', [DealController::class, 'updateLabels'])->name('lead.deals.update-labels');
     Route::post('crm/deals/{deal}/assign-users', [DealController::class, 'assignUsers'])->name('lead.deals.assign-users');
     Route::delete('crm/deals/{deal}/users/{user}', [DealController::class, 'removeUser'])->name('lead.deals.remove-user');

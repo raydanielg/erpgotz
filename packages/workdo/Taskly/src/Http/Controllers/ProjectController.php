@@ -30,6 +30,8 @@ use Workdo\Taskly\Models\ProjectBug;
 use Workdo\Taskly\Models\ProjectClient;
 use Workdo\Taskly\Models\ProjectUser;
 use Workdo\Taskly\Models\ProjectFile;
+use App\Models\SalesInvoice;
+use App\Models\SalesInvoiceItem;
 
 class ProjectController extends Controller
 {
@@ -600,5 +602,54 @@ class ProjectController extends Controller
             return response()->json($projects);
         }
         return response()->json(['error' => __('Permission denied')], 403);
+    }
+
+    public function generateInvoice(Request $request, Project $project)
+    {
+        if (Auth::user()->can('manage-project')) {
+            if ($project->created_by != creatorId()) {
+                return back()->with('error', __('Permission denied'));
+            }
+
+            try {
+                $client = $project->clients()->first();
+                if (!$client) {
+                    return back()->with('error', __('No client assigned to this project.'));
+                }
+
+                $invoice = new SalesInvoice();
+                $invoice->invoice_number = SalesInvoice::generateInvoiceNumber();
+                $invoice->invoice_date = now();
+                $invoice->due_date = now()->addDays(30);
+                $invoice->customer_id = $client->id;
+                $invoice->subtotal = $project->budget ?? 0;
+                $invoice->tax_amount = 0;
+                $invoice->discount_amount = 0;
+                $invoice->total_amount = $project->budget ?? 0;
+                $invoice->paid_amount = 0;
+                $invoice->balance_amount = $project->budget ?? 0;
+                $invoice->status = 'draft';
+                $invoice->type = 'project';
+                $invoice->notes = __('Generated from project: ') . $project->name;
+                $invoice->creator_id = Auth::id();
+                $invoice->created_by = creatorId();
+                $invoice->save();
+
+                // Add invoice item
+                SalesInvoiceItem::create([
+                    'invoice_id' => $invoice->id,
+                    'item_name' => $project->name,
+                    'quantity' => 1,
+                    'unit_price' => $project->budget ?? 0,
+                    'total_price' => $project->budget ?? 0,
+                ]);
+
+                return redirect()->route('sales-invoices.show', $invoice->id)->with('success', __('Invoice generated from project successfully.'));
+            } catch (\Exception $e) {
+                return back()->with('error', $e->getMessage());
+            }
+        } else {
+            return back()->with('error', __('Permission denied'));
+        }
     }
 }

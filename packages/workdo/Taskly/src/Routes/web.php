@@ -74,6 +74,7 @@ Route::middleware(['web', 'auth', 'verified', 'PlanModuleCheck:Taskly'])->group(
     Route::put('/project/{project}', [ProjectController::class, 'update'])->name('project.update');
     Route::delete('/project/{project}', [ProjectController::class, 'destroy'])->name('project.destroy');
     Route::post('/project/{project}/duplicate', [ProjectController::class, 'duplicate'])->name('project.duplicate');
+    Route::post('/project/{project}/generate-invoice', [ProjectController::class, 'generateInvoice'])->name('project.generate-invoice');
 
     // Setup routes
     Route::get('/project-setup/task-stages', [TaskStageController::class, 'index'])->name('project.task-stages.index');
