@@ -53,8 +53,8 @@ export default function Index() {
 
     return (
         <AuthenticatedLayout
-            breadcrumbs={[{label: t('Add-ons')}]}
-            pageTitle={t('Add-ons Manager')}
+            breadcrumbs={[{label: t('Module Installer')}]}
+            pageTitle={t('Module Installer')}
             pageActions={
                 <TooltipProvider>
                     {auth.user?.permissions?.includes('manage-add-on') && (
@@ -72,7 +72,7 @@ export default function Index() {
                 </TooltipProvider>
             }
         >
-            <Head title={t('Add-ons')} />
+            <Head title={t('Module Installer')} />
 
             <Card>
                 <CardHeader className="pb-3">
@@ -80,7 +80,7 @@ export default function Index() {
                         value={searchTerm}
                         onChange={setSearchTerm}
                         onSearch={() => {}}
-                        placeholder={t('Search add-ons...')}
+                        placeholder={t('Search modules...')}
                         className="w-full"
                     />
                 </CardHeader>
@@ -165,8 +165,8 @@ export default function Index() {
                     ) : (
                         <NoRecordsFound
                             icon={Package}
-                            title={t('No add-ons found')}
-                            description={searchTerm ? t('No add-ons match your search criteria.') : t('No add-ons are available.')}
+                            title={t('No modules found')}
+                            description={searchTerm ? t('No modules match your search criteria.') : t('No modules are available.')}
                             hasFilters={!!searchTerm}
                             onClearFilters={() => setSearchTerm('')}
                         />

@@ -43,16 +43,16 @@ export default function UploadPackages() {
     return (
         <AuthenticatedLayout
             breadcrumbs={[
-                {label: t('Add-ons'), url: route('add-ons.index')},
+                {label: t('Module Installer'), url: route('add-ons.index')},
                 {label: t('Upload')}
             ]}
-            pageTitle={t('Upload Add-ons')}
+            pageTitle={t('Upload Modules')}
         >
-            <Head title={t('Upload Add-ons')} />
+            <Head title={t('Upload Modules')} />
 
             <Card>
                 <CardHeader>
-                    <CardTitle>{t('Upload Add-ons Zip Files')}</CardTitle>
+                    <CardTitle>{t('Upload Module Zip Files')}</CardTitle>
                 </CardHeader>
                 <CardContent>
                     <form onSubmit={handleSubmit} className="space-y-6">
@@ -123,7 +123,7 @@ export default function UploadPackages() {
                                 type="submit"
                                 disabled={processing || files.length === 0}
                             >
-                                {processing ? t('Installing...') : t('Install Add-ons')}
+                                {processing ? t('Installing...') : t('Install Modules')}
                             </Button>
                         </div>
                     </form>

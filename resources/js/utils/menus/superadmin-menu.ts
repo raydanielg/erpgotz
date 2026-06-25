@@ -84,7 +84,7 @@ export const getSuperAdminMenu = (t: (key: string) => string): NavItem[] => [
         order: 2950,
     },
     {
-        title: t('Add-ons Manager'),
+        title: t('Module Installer'),
         href: route('add-ons.index'),
         icon: Package,
         permission: 'manage-add-on',
