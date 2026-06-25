@@ -23,31 +23,21 @@ class DatabaseSeeder extends Seeder
         $userId = User::where('email', 'company@example.com')->first()->id;
         User::CompanySetting($userId);
 
-        if(config('app.run_demo_seeder'))
-        {
-            // // Pass $userId to your custom seeder
-
-
-            (new CouponSeeder())->run();
-            (new DemoUserSeeder())->run();
-
-            (new DemoStaffSeeder())->run($userId);
-            (new DemoLoginHistorySeeder())->run($userId);
-            (new DemoWarehouseSeeder())->run($userId);
-            (new HelpdeskCategorySeeder())->run();
-            (new HelpdeskTicketSeeder())->run($userId);
-            (new HelpdeskReplySeeder())->run($userId);
-            (new DemoOrderSeeder())->run($userId);
-            (new DemoCouponSeeder())->run($userId);
-            (new DemoBankTransferSeeder())->run($userId);
-            (new DemoCouponDetailsSeeder())->run($userId);
-            (new MessengerSeeder())->run();
-
-             // temporary
-            // (new PackageSeeder())->run($userId);
-
-            // in this seeder product
-            (new DemoTransferSeeder())->run($userId);
-        }
+        // All Demo / Module Seeders - run everything
+        (new CouponSeeder())->run();
+        (new DemoUserSeeder())->run();
+        (new DemoStaffSeeder())->run($userId);
+        (new DemoLoginHistorySeeder())->run($userId);
+        (new DemoWarehouseSeeder())->run($userId);
+        (new HelpdeskCategorySeeder())->run();
+        (new HelpdeskTicketSeeder())->run($userId);
+        (new HelpdeskReplySeeder())->run($userId);
+        (new DemoOrderSeeder())->run($userId);
+        (new DemoCouponSeeder())->run($userId);
+        (new DemoBankTransferSeeder())->run($userId);
+        (new DemoCouponDetailsSeeder())->run($userId);
+        (new MessengerSeeder())->run();
+        (new PackageSeeder())->run($userId);
+        (new DemoTransferSeeder())->run($userId);
     }
 }
