@@ -52,9 +52,9 @@ return [
     |
     */
 
-    'is_demo' => false,
+    'is_demo' => true,
 
-    'run_demo_seeder' => false,
+    'run_demo_seeder' => true,
 
     /*
     |--------------------------------------------------------------------------
