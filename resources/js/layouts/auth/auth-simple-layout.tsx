@@ -76,15 +76,24 @@ export default function AuthSimpleLayout({
                     {/* Logo */}
                     <div className="text-center mb-8">
                         <div className="relative lg:inline-block lg:px-6">
-                            <Link href={route('dashboard')} className="inline-block max-w-[180px]">
+                            <Link href={route('dashboard')} className="inline-block">
                                 {logoSrc ? (
                                     <img
                                         src={getImagePath(logoSrc)}
                                         alt={settings.titleText || 'Logo'}
-                                        className="w-auto mx-auto"
+                                        className="w-auto mx-auto max-h-20 object-contain"
                                     />
                                 ) : (
-                                    <ApplicationLogo className="h-8 w-8 mx-auto text-primary" />
+                                    <div className="flex flex-col items-center gap-3">
+                                        <div className="w-24 h-24 rounded-full bg-white shadow-lg border-2 flex items-center justify-center p-2">
+                                            <img
+                                                src="/asyxgrouplogo.png"
+                                                alt="Asyx Group Company LTD"
+                                                className="w-full h-full object-contain rounded-full"
+                                            />
+                                        </div>
+                                        <span className="text-lg font-bold text-gray-800 tracking-wide">Asyx Group Company LTD</span>
+                                    </div>
                                 )}
                             </Link>
                         </div>

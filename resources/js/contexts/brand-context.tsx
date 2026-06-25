@@ -47,7 +47,7 @@ export function BrandProvider({ children }: { children: ReactNode }) {
     sidebarVariant: globalSettings?.sidebarVariant || 'inset',
     sidebarStyle: globalSettings?.sidebarStyle || 'plain',
     layoutDirection: globalSettings?.layoutDirection || 'ltr',
-    themeMode: globalSettings?.themeMode || 'dark',
+    themeMode: globalSettings?.themeMode || 'light',
     themeColor: globalSettings?.themeColor || 'orange',
     customColor: globalSettings?.customColor || '#f97316',
   };

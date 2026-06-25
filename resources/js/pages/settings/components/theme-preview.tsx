@@ -21,7 +21,7 @@ export function ThemePreview({
   sidebarVariant = 'inset',
   sidebarStyle = 'plain',
   layoutDirection = 'ltr',
-  themeMode = 'dark'
+  themeMode = 'light'
 }: ThemePreviewProps) {
   const { t } = useTranslation();
 

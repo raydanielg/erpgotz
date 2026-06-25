@@ -46,7 +46,7 @@ export default function BrandSettings({ userSettings, auth }: BrandSettingsProps
     sidebarVariant: userSettings?.sidebarVariant || 'inset',
     sidebarStyle: userSettings?.sidebarStyle || 'plain',
     layoutDirection: userSettings?.layoutDirection || 'ltr',
-    themeMode: userSettings?.themeMode || 'dark',
+    themeMode: userSettings?.themeMode || 'light',
     themeColor: userSettings?.themeColor || 'orange',
     customColor: userSettings?.customColor || '#f97316',
   });
