@@ -51,7 +51,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         <SidebarMenu>
           <SidebarMenuItem>
             <SidebarMenuButton size="lg" asChild>
-              <Link href={route('dashboard')} className="flex items-center !py-4 h-auto justify-center">
+              <Link href={route('dashboard')} className="flex items-center py-2 h-[56px] justify-center">
                 {/* Logo for expanded sidebar */}
                 <div className="group-data-[collapsible=icon]:hidden flex items-center">
                   {(() => {
@@ -64,7 +64,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                       <img
                         src={displayUrl}
                         alt="Logo"
-                        className="w-auto max-w-[180px] transition-all duration-200"
+                        className="w-auto max-w-[120px] max-h-[36px] object-contain transition-all duration-200"
                       />
                     ) : (
                       <div className="h-12 text-inherit font-semibold flex items-center text-lg tracking-tight">
