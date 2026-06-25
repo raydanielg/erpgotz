@@ -37,7 +37,7 @@ class DatabaseSeeder extends Seeder
         (new DemoBankTransferSeeder())->run($userId);
         (new DemoCouponDetailsSeeder())->run($userId);
         (new MessengerSeeder())->run();
-        (new PackageSeeder())->run($userId);
+        // (new PackageSeeder())->run($userId); // requires artisan command context
         (new DemoTransferSeeder())->run($userId);
     }
 }
