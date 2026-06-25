@@ -12,7 +12,7 @@ import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { DataTable } from "@/components/ui/data-table";
 import { Dialog } from "@/components/ui/dialog";
 import { ConfirmationDialog } from '@/components/ui/confirmation-dialog';
-import { Plus, Edit, Trash2, Key, Users as UsersIcon, User as UserIcon, UserCheck, History, Lock } from "lucide-react";
+import { Plus, Edit, Trash2, Key, Users as UsersIcon, User as UserIcon, UserCheck, History, Lock, Crown } from "lucide-react";
 import { getImagePath } from '@/utils/helpers';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { FilterButton } from '@/components/ui/filter-button';
@@ -22,12 +22,13 @@ import { ListGridToggle } from '@/components/ui/list-grid-toggle';
 import Create from './create';
 import EditUser from './edit';
 import ChangePassword from './change-password';
+import ChangePlan from './change-plan';
 import NoRecordsFound from '@/components/no-records-found';
 import { User, UsersIndexProps, UserFilters, UserModalState } from './types';
 
 export default function Index() {
     const { t } = useTranslation();
-    const { users, roles, auth } = usePage<UsersIndexProps>().props;
+    const { users, roles, plans, auth } = usePage<UsersIndexProps>().props;
     const urlParams = new URLSearchParams(window.location.search);
 
     const [filters, setFilters] = useState<UserFilters>({
@@ -79,7 +80,7 @@ export default function Index() {
         router.get(route('users.index'), {per_page: perPage, view: viewMode});
     };
 
-    const openModal = (mode: 'add' | 'edit' | 'change-password', data: User | null = null) => {
+    const openModal = (mode: 'add' | 'edit' | 'change-password' | 'change-plan', data: User | null = null) => {
         setModalState({
             isOpen: true,
             mode,
@@ -149,6 +150,29 @@ export default function Index() {
                 </span>
             )
         },
+        {
+            key: 'subscription',
+            header: t('Subscription'),
+            render: (_: any, user: User) => {
+                const plan = plans.find((p) => p.id === user.active_plan);
+                return (
+                    <div className="flex flex-col">
+                        {plan ? (
+                            <>
+                                <span className="font-medium text-sm">{plan.name}</span>
+                                {user.plan_expire_date && (
+                                    <span className="text-xs text-gray-500">
+                                        {t('Expires')}: {new Date(user.plan_expire_date).toLocaleDateString()}
+                                    </span>
+                                )}
+                            </>
+                        ) : (
+                            <span className="text-sm text-gray-400">{t('No Plan')}</span>
+                        )}
+                    </div>
+                );
+            }
+        },
         ...(auth.user?.permissions?.some((p: string) => ['change-password-users', 'edit-users', 'delete-users'].includes(p)) ? [{
             key: 'actions',
             header: t('Actions'),
@@ -193,6 +217,18 @@ export default function Index() {
                                     </TooltipTrigger>
                                     <TooltipContent>
                                         <p>{t('Change Password')}</p>
+                                    </TooltipContent>
+                                </Tooltip>
+                            )}
+                            {auth.user?.permissions?.includes('edit-users') && (
+                                <Tooltip delayDuration={0}>
+                                    <TooltipTrigger asChild>
+                                        <Button variant="ghost" size="sm" onClick={() => openModal('change-plan', user)} className="h-8 w-8 p-0 text-amber-600 hover:text-amber-700">
+                                            <Crown className="h-4 w-4" />
+                                        </Button>
+                                    </TooltipTrigger>
+                                    <TooltipContent>
+                                        <p>{t('Change Subscription')}</p>
                                     </TooltipContent>
                                 </Tooltip>
                             )}
@@ -435,6 +471,24 @@ export default function Index() {
                                                             </div>
                                                         )}
                                                     </div>
+                                                    <div>
+                                                        <p className="text-xs font-medium text-gray-600 mb-1">{t('Subscription')}</p>
+                                                        {(() => {
+                                                            const plan = plans.find((p) => p.id === user.active_plan);
+                                                            return plan ? (
+                                                                <div className="text-xs text-gray-900">
+                                                                    <span className="font-medium">{plan.name}</span>
+                                                                    {user.plan_expire_date && (
+                                                                        <span className="block text-gray-500">
+                                                                            {t('Expires')}: {new Date(user.plan_expire_date).toLocaleDateString()}
+                                                                        </span>
+                                                                    )}
+                                                                </div>
+                                                            ) : (
+                                                                <span className="text-xs text-gray-400">{t('No Plan')}</span>
+                                                            );
+                                                        })()}
+                                                    </div>
                                                 </div>
 
                                                 <div className="flex items-center justify-between pt-3 border-t">
@@ -484,6 +538,18 @@ export default function Index() {
                                                                         </TooltipTrigger>
                                                                         <TooltipContent>
                                                                             <p>{t('Change Password')}</p>
+                                                                        </TooltipContent>
+                                                                    </Tooltip>
+                                                                )}
+                                                                {auth.user?.permissions?.includes('edit-users') && (
+                                                                    <Tooltip delayDuration={300}>
+                                                                        <TooltipTrigger asChild>
+                                                                            <Button variant="ghost" size="sm" onClick={() => openModal('change-plan', user)} className="h-8 w-8 p-0 text-amber-600">
+                                                                                <Crown className="h-4 w-4" />
+                                                                            </Button>
+                                                                        </TooltipTrigger>
+                                                                        <TooltipContent>
+                                                                            <p>{t('Change Subscription')}</p>
                                                                         </TooltipContent>
                                                                     </Tooltip>
                                                                 )}
@@ -565,6 +631,13 @@ export default function Index() {
                     <ChangePassword
                         user={modalState.data}
                         onSuccess={closeModal}
+                    />
+                )}
+                {modalState.mode === 'change-plan' && modalState.data && (
+                    <ChangePlan
+                        user={modalState.data}
+                        onSuccess={closeModal}
+                        plans={plans}
                     />
                 )}
             </Dialog>

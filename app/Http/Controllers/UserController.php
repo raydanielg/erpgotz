@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use App\Models\LoginHistory;
+use App\Models\Plan;
 use App\Http\Requests\StoreUserRequest;
 use App\Http\Requests\UpdateUserRequest;
 use App\Http\Requests\ChangePasswordRequest;
@@ -14,6 +15,7 @@ use App\Models\EmailTemplate;
 use Illuminate\Support\Facades\Hash;
 use Spatie\Permission\Models\Role;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Http\Request;
 
 class UserController extends Controller
 {
@@ -47,10 +49,12 @@ class UserController extends Controller
                 ->withQueryString();
 
             $roles = Role::where('created_by', creatorId())->pluck('label', 'id');
+            $plans = Plan::where('created_by', creatorId())->orWhereNull('created_by')->active()->get(['id', 'name', 'number_of_users', 'free_plan']);
 
             return Inertia::render('users/index', [
                 'users' => $users,
                 'roles' => $roles,
+                'plans' => $plans,
             ]);
         }
         else{
@@ -233,6 +237,28 @@ class UserController extends Controller
         }
         else{
             return back()->with('error', __('Permission denied'));
+        }
+    }
+
+    public function updatePlan(Request $request, User $user)
+    {
+        if(Auth::user()->can('edit-users')){
+            $validated = $request->validate([
+                'plan_id' => 'required|exists:plans,id',
+                'plan_expire_date' => 'nullable|date',
+            ]);
+
+            $plan = Plan::find($validated['plan_id']);
+
+            $user->active_plan = $plan->id;
+            $user->plan_expire_date = $validated['plan_expire_date'] ?? now()->addYear();
+            $user->total_user = $plan->number_of_users;
+            $user->save();
+
+            return back()->with('success', __('The user subscription has been updated successfully.'));
+        }
+        else{
+            return redirect()->route('users.index')->with('error', __('Permission denied'));
         }
     }
 }

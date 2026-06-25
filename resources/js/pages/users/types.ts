@@ -9,6 +9,10 @@ export interface User {
     type: string;
     is_enable_login: boolean;
     is_disable?: number;
+    active_plan?: number | null;
+    plan_expire_date?: string | null;
+    trial_expire_date?: string | null;
+    total_user?: number;
     avatar?: string;
     created_at: string;
 }
@@ -50,6 +54,12 @@ export interface ChangePasswordProps {
     onSuccess: () => void;
 }
 
+export interface ChangePlanProps {
+    user: User;
+    onSuccess: () => void;
+    plans?: Array<{id: number; name: string; number_of_users: number; free_plan: boolean}>;
+}
+
 export interface UserFilters {
     name: string;
     email: string;
@@ -60,13 +70,14 @@ export interface UserFilters {
 export type PaginatedUsers = PaginatedData<User>;
 export interface UserModalState {
     isOpen: boolean;
-    mode: '' | 'add' | 'edit' | 'change-password';
+    mode: '' | 'add' | 'edit' | 'change-password' | 'change-plan';
     data: User | null;
 }
 
 export interface UsersIndexProps {
     users: PaginatedUsers;
     roles: Record<string, string>;
+    plans: Array<{id: number; name: string; number_of_users: number; free_plan: boolean}>;
     auth: AuthContext;
     [key: string]: unknown;
 }

@@ -48,6 +48,7 @@ Route::middleware(['auth', 'verified', 'PlanModuleCheck'])->group(function () {
     // Resource management routes
     Route::resource('users', UserController::class);
     Route::patch('users/{user}/change-password', [UserController::class, 'changePassword'])->name('users.change-password');
+    Route::patch('users/{user}/update-plan', [UserController::class, 'updatePlan'])->name('users.update-plan');
     Route::post('users/{user}/impersonate', [UserController::class, 'impersonate'])->name('users.impersonate');
     Route::post('users/leave-impersonation', [UserController::class, 'leaveImpersonation'])->name('users.leave-impersonation');
     Route::get('users/login/history', [UserController::class, 'loginHistory'])->name('users.login-history');
